@@ -102,7 +102,7 @@ for fastq_file in ${fastq_files[@]}; do
     save_file="$run_results_folder""/""hifiasm""$todays_date""-""${base_name}"".asm"
 
     touch "$save_file"
-    echo "[$start_time] Assembling $save_file"
+    echo "[$start_time] Assembling $fastq_file"
     echo "Results will be saved in $save_file"
 
 

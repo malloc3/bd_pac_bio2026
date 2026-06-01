@@ -1,0 +1,124 @@
+#!/bin/bash -l
+#SBATCH -J'hifiasm_heterozygot_run'            # this names the job
+#SBATCH --ntasks=32                      # this sets the number of cores we may use
+#SBATCH --nodes=1                       # this setst the number of nodes we will use
+#SBATCH -o outlog                       # this will create an output log
+#SBATCH -e errlog                       # this will create an error log
+#SBATCH -t 10:00:00                     # this sets the MAX time the job will run (hh:mm:ss)
+#SBATCH --mail-user=cmallory@ucsb.edu   # This is asking for email updates
+#SBATCH --mail-type ALL                 # This will send updates at every step
+
+number_of_threads=32  #Set this to the number of tasts "ntasks" from sbatch
+
+#We need to set our file path to be where all of our documents are.
+# Typically we will submit our slurm.job file from the right directory.  However
+# it is probably good to move to the right folder just in case!
+#run_files_top_directory="./home/cmallory/Genetic_analysis/bd_genetics_analysis/bowtie_alignment"  # This variable can be changed to hold the directory where stuff is!
+
+
+
+#First run the unpaired script
+cd $SLURM_SUBMIT_DIR # THis will set the current dir to location that the job was submitted from.    
+
+fastq_files_csv_path = "./batch_1_file_names.txt"
+
+
+echo "the current path now is: $SLURM_SUBMIT_DIR"
+
+todays_date=$(date '+%Y-%m-%d_%H-%M-00')
+#Make a directoryt o save settings files and setting information
+run_results_folder="hifiasm-""$todays_date"
+mkdir "./""$run_results_folder"
+
+
+#Checks if our text file with file names exists!
+if [ -f $fastq_files_csv_path ]; then
+    #mapfile -t fastq_files_names < <(awk -F',' '{for(i=1;i<=NF;i++) print $i}' $fastq_files_csv_path)
+    mapfile -t fastq_files_names < "$fastq_files_csv_path"
+else
+    echo "File path $fastq_files_csv_path does not exist"; exit 1
+fi
+
+# Now check if the fastq files listed in the text file exist
+# IT figures out the full path to all the files of interest.  If it finds those files it adds the full
+# path to the fastq_files list for use later
+
+fastq_files=()
+
+all_files_exist=true
+non_existing_files=()
+non_readable_fast_q_files=()
+
+for i in "${!fastq_files_names[@]}"; do
+    file_name=${fastq_files_names[$i]}  #in some cases this includes part of a full path
+    echo "|--""$file_name""--|"
+
+    if [ -f "$file_name" ]; then
+        if [ -r $file_name ]; then
+            fastq_files+=("$file_name")
+        else
+            all_files_exist=false
+            non_readable_fast_q_files+=("$file_name")
+        fi
+    else
+	    all_files_exist=false
+	    non_existing_files+=("$file_name")
+    fi
+done
+
+if $all_files_exist; then
+    echo "All fastq files exist and are readable!"
+    echo "============================"
+else
+    echo "The following files do not exist:"
+    for i in "${!non_existing_files[@]}"; do
+	    echo "START-|""${non_existing_files[$i]}""|-END"
+    done
+    echo "The following files are not readable:"
+    for i in "${!non_readable_fast_q_files[@]}"; do
+	    echo "	${non_readable_fast_q_files[$i]}"
+    done
+    echo "Run Failed"
+    exit 1 
+fi
+
+
+
+echo "Running Paired Fast QC"
+# Write loop for all the fastq files sacved in the fastq_files list.
+#  Create new output file name and location name etc should be in the output folder called run_results_folder
+# Then run the assembly code.
+#  Create a few debugging comments to save in the run output file.
+
+
+for fastq_file in ${fastq_files[@]}; do
+    start_time=$(date '+%Y-%m-%d %H:%M:%S')
+
+
+    base_name="$(basename "$fastq_file" .fastq)"
+
+    
+
+    #make output file
+    save_file="$run_results_folder""/""hifiasm""$todays_date""-""${base_name}"".asm"
+
+    touch "$sam_save_file"
+    echo "[$start_time] Aligning $sam_save_file to $reference_genome_name"
+    echo "Results will be saved in $sam_save_file"
+
+
+    ./hifiasm/hifiasm -o save_file -t$number_of_threads --hg-size 24m -l0 fastq_file
+
+    end_time=$(date '+%Y-%m-%d %H:%M:%S')
+    echo "[$end_time] q of $fist_file_base_name complete!"
+    echo "=========================================="
+done
+
+
+
+
+/bin/hostname  # This reports what specific node this code is running on!
+time mpirun -np $SLURM_NTASKS  ~pcw/vasp # This will report the actual time that was taken to run my script!
+
+echo "Job finished normally"
+scancel $SLURM_JOB_ID

@@ -1,0 +1,6 @@
+/home/cmallory/Genetic_analysis/bd_pac_bio2026/fastq/m84066_260515_190348_s3.Ex124.6_6.fastq
+/home/cmallory/Genetic_analysis/bd_pac_bio2026/fastq/m84066_260515_190348_s3.Ex178.7_7.fastq
+/home/cmallory/Genetic_analysis/bd_pac_bio2026/fastq/m84066_260515_190348_s3.Ex179.8_8.fastq
+/home/cmallory/Genetic_analysis/bd_pac_bio2026/fastq/m84066_260515_190348_s3.Ex187B.9_9.fastq
+/home/cmallory/Genetic_analysis/bd_pac_bio2026/fastq/m84066_260515_190348_s3.Ex189B.11_11.fastq
+/home/cmallory/Genetic_analysis/bd_pac_bio2026/fastq/m84066_260515_190348_s3.Ex191A.10_10.fastq

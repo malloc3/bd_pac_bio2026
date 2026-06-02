@@ -25,16 +25,12 @@ echo $fastq_files_csv_path
 
 echo "the current path now is: $SLURM_SUBMIT_DIR"
 
-todays_date=$(date '+%Y-%m-%d_%H-%M-00')
-#Make a directoryt o save settings files and setting information
-run_results_folder="hifiasm_homo-""$todays_date"
-mkdir "./""$run_results_folder"
 
 
 # Now check if the fastq files listed in the text file exist
 # IT figures out the full path to all the files of interest.  If it finds those files it adds the full
 # path to the fastq_files list for use later
-run_results="/home/cmallory/Genetic_analysis/bd_pac_bio2026/hifiasm_homo-2026-06-01_16-52-00"
+run_results_folder="/home/cmallory/Genetic_analysis/bd_pac_bio2026/hifiasm_homo-2026-06-01_16-52-00"
 fastq_file="/home/cmallory/Genetic_analysis/bd_pac_bio2026/fastq/m84066_260515_190348_s3.Ex189B.11_11.fastq"
 
 

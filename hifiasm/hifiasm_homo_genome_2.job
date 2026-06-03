@@ -1,9 +1,9 @@
 #!/bin/bash -l
-#SBATCH -J'hifiasm_homozygot_run_2'            # this names the job
+#SBATCH -J'Ex178_hifiasm'            # this names the job
 #SBATCH --ntasks=32                      # this sets the number of cores we may use
 #SBATCH --nodes=1                       # this setst the number of nodes we will use
-#SBATCH -o outlog_homo_2                       # this will create an output log
-#SBATCH -e errlog_homo_2                       # this will create an error log
+#SBATCH -o outlog_Ex178                       # this will create an output log
+#SBATCH -e errlog_Ex178                       # this will create an error log
 #SBATCH -t 30:00:00                     # this sets the MAX time the job will run (hh:mm:ss)
 #SBATCH --mail-user=cmallory@ucsb.edu   # This is asking for email updates
 #SBATCH --mail-type ALL                 # This will send updates at every step
@@ -25,29 +25,21 @@ echo $fastq_files_csv_path
 
 echo "the current path now is: $SLURM_SUBMIT_DIR"
 
-
-# Now check if the fastq files listed in the text file exist
-# IT figures out the full path to all the files of interest.  If it finds those files it adds the full
-# path to the fastq_files list for use later
-run_results_folder="/home/cmallory/Genetic_analysis/bd_pac_bio2026/hifiasm_homo-2026-06-01_16-52-00"
+# This is the location of the fastq file we will use!
 fastq_file="/home/cmallory/Genetic_analysis/bd_pac_bio2026/fastq/m84066_260515_190348_s3.Ex178.7_7.fastq"
-
-
-echo "Lets start our assembly!"
-# Write loop for all the fastq files sacved in the fastq_files list.
-#  Create new output file name and location name etc should be in the output folder called run_results_folder
-# Then run the assembly code.
-#  Create a few debugging comments to save in the run output file.
 
 start_time=$(date '+%Y-%m-%d %H:%M:%S')
 
 
 base_name="$(basename "$fastq_file" .fastq)"
 
-#make output file
+run_results_folder="/home/cmallory/Genetic_analysis/bd_pac_bio2026/hifiasm/hifiasm_homo-""$base_name""-""$start_time"
+
+mkdir "$run_results_folder"
+
+#setup output_folder
 save_file="$run_results_folder""/""hifiasm""$todays_date""-""${base_name}"".asm"
 
-touch "$save_file"
 echo "[$start_time] Assembling $fastq_file"
 echo "Results will be saved in $save_file"
 

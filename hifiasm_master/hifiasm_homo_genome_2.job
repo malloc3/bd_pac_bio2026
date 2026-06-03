@@ -44,7 +44,7 @@ echo "[$start_time] Assembling $fastq_file"
 echo "Results will be saved in $save_file"
 
 
-./hifiasm/hifiasm -o $save_file -t$number_of_threads --hg-size 24m -l0 $fastq_file
+./../hifiasm/hifiasm -o $save_file -t$number_of_threads --hg-size 24m -l0 $fastq_file
 
 end_time=$(date '+%Y-%m-%d %H:%M:%S')
 echo "[$end_time] of $base_name complete!"

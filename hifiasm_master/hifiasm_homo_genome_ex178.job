@@ -33,7 +33,7 @@ start_time=$(date '+%Y-%m-%d %H:%M:%S')
 
 base_name="$(basename "$fastq_file" .fastq)"
 
-run_results_folder="/home/cmallory/Genetic_analysis/bd_pac_bio2026/hifiasm/hifiasm_homo-""$base_name""-""$start_time"
+run_results_folder="./hifiasm_homo-""$base_name""-""$start_time"
 
 mkdir "$run_results_folder"
 
